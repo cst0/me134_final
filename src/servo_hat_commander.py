@@ -42,10 +42,11 @@ class ServoController(object):
 
             self.simulation_mode = False
         except ImportError:
-            print("WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here.")
+            print(
+                "WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here."
+            )
 
         rospy.Subscriber("torso_control", TorsoState, self.torso_control_cb)
-
 
     def add_variables_to_self(self):
         var_names = self.ddynrec.get_variable_names()
@@ -85,6 +86,7 @@ class ServoController(object):
             self.pca.channels[RIGHT_ELBOW].duty_cycle = int(right_elbow)
             self.pca.channels[HEAD].duty_cycle        = int(head)
         # fmt:on
+
 
 def main():
     sc = ServoController()
