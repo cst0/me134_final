@@ -5,20 +5,23 @@ import rospy
 
 from me134.msg import Controller
 
+
 class JoystickPublisher(object):
     def __init__(self, query_rate=20):
-        pygame.init() #type:ignore
+        pygame.init()  # type:ignore
         pygame.joystick.init()
         self.j0 = pygame.joystick.Joystick(0)
 
         self.query_rate = query_rate
         self.timer_loop = None
 
-        self.controller_publisher = rospy.Publisher('controller', Controller, queue_size=5)
+        self.controller_publisher = rospy.Publisher(
+            "controller", Controller, queue_size=5
+        )
 
     def shutdown(self):
         self.stop()
-        pygame.quit() #type:ignore
+        pygame.quit()  # type:ignore
         self.controller_publisher.unregister()
 
     def stop(self):
@@ -26,7 +29,7 @@ class JoystickPublisher(object):
             self.timer_loop.shutdown()
 
     def start(self):
-        self.timer_loop = rospy.Timer(rospy.Duration(1/self.query_rate), self.query)
+        self.timer_loop = rospy.Timer(rospy.Duration(1 / self.query_rate), self.query)
 
     def query(self, event):
         del event
@@ -56,15 +59,17 @@ class JoystickPublisher(object):
 
         self.controller_publisher.publish(msg)
 
+
 def main():
-    rospy.init_node('controller_publisher', anonymous=False)
+    rospy.init_node("controller_publisher", anonymous=False)
     jp = JoystickPublisher()
     rospy.on_shutdown(jp.shutdown)
 
     jp.start()
-    rospy.loginfo('Controller node ready to go!')
+    rospy.loginfo("Controller node ready to go!")
     rospy.spin()
-    rospy.loginfo('Controller node shut down.')
+    rospy.loginfo("Controller node shut down.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

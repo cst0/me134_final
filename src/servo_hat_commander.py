@@ -42,10 +42,11 @@ class ServoController(object):
 
             self.simulation_mode = False
         except ImportError:
-            print("WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here.")
+            print(
+                "WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here."
+            )
 
         rospy.Subscriber("control_to_servo/out", ArmState, self.arm_control_cb)
-
 
     def add_variables_to_self(self):
         var_names = self.ddynrec.get_variable_names()
@@ -90,6 +91,7 @@ class ServoController(object):
             self.pca.channels[LEFT_FINGER].duty_cycle = int(self.servo_max_pwm if left_finger else self.servo_min_pwm)
             self.pca.channels[RIGHT_FINGER].duty_cycle = int(self.servo_max_pwm if right_finger else self.servo_min_pwm)
         # fmt:on
+
 
 def main():
     sc = ServoController()
