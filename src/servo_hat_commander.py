@@ -2,16 +2,16 @@
 
 import rospy
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
-from me134.msg import WheelState, TorsoState
+from me134.msg import ArmState
 
 # constants representing the servo state
 # fmt:off
-LEFT_WHEEL  = 0
-RIGHT_WHEEL = 4
-CHEST       = 8
+LEFT_FINGER  = 0
+RIGHT_FINGER = 4
+LEFT_SHOULDER = 8
 LEFT_ELBOW  = 9
 RIGHT_ELBOW = 10
-HEAD        = 11
+RIGHT_SHOULDER = 11
 # fmt:on
 
 
@@ -46,7 +46,7 @@ class ServoController(object):
                 "WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here."
             )
 
-        rospy.Subscriber("torso_control", TorsoState, self.torso_control_cb)
+        rospy.Subscriber("control_to_servo/out", ArmState, self.arm_control_cb)
 
     def add_variables_to_self(self):
         var_names = self.ddynrec.get_variable_names()
@@ -60,31 +60,36 @@ class ServoController(object):
             self.__dict__[var_name] = config[var_name]
         return config
 
-    def torso_control_cb(self, msg: TorsoState):
+    def arm_control_cb(self, msg: ArmState):
         # fmt:off
         # retrieve values and ensure they're between -1 and 1
-        chest       = max(-1, min(1, msg.chest))
+        left_shoulder       = max(-1, min(1, msg.left_shoulder))
         left_elbow  = max(-1, min(1, msg.left_elbow))
-        right_elbow = max(-1, min(1, msg.right_elbow))
-        head        = max(-1, min(1, msg.head))
+        right_shoulder = max(-1, min(1, msg.right_shoulder))
+        right_elbow        = max(-1, min(1, msg.right_elbow))
+
+        left_finger = msg.left_finger
+        right_finger = msg.right_finger
 
         # convert each of these -1 to 1 values into the range of pwm values
-        chest = ((chest + 1) / 2) * (self.servo_max_pwm - self.servo_min_pwm)
+        left_shoulder = ((left_shoulder + 1) / 2) * (self.servo_max_pwm - self.servo_min_pwm)
         left_elbow = ((left_elbow + 1) / 2) * (self.servo_max_pwm - self.servo_min_pwm)
+        right_shoulder = ((right_shoulder + 1) / 2) * (self.servo_max_pwm - self.servo_min_pwm)
         right_elbow = ((right_elbow + 1) / 2) * (self.servo_max_pwm - self.servo_min_pwm)
-        head = ((head + 1) / 2) * (self.servo_max_pwm - self.servo_min_pwm)
 
-        chest = max(self.servo_min_pwm, min(self.servo_max_pwm, chest))
+        left_shoulder = max(self.servo_min_pwm, min(self.servo_max_pwm, left_shoulder))
         left_elbow = max(self.servo_min_pwm, min(self.servo_max_pwm, left_elbow))
         right_elbow = max(self.servo_min_pwm, min(self.servo_max_pwm, right_elbow))
-        head = max(self.servo_min_pwm, min(self.servo_max_pwm, head))
+        right_shoulder = max(self.servo_min_pwm, min(self.servo_max_pwm, right_shoulder))
 
         # send pwm values
         if self.pca is not None:
-            self.pca.channels[CHEST].duty_cycle       = int(chest)
+            self.pca.channels[LEFT_SHOULDER].duty_cycle = int(left_shoulder)
             self.pca.channels[LEFT_ELBOW].duty_cycle  = int(left_elbow)
+            self.pca.channels[RIGHT_SHOULDER].duty_cycle = int(right_shoulder)
             self.pca.channels[RIGHT_ELBOW].duty_cycle = int(right_elbow)
-            self.pca.channels[HEAD].duty_cycle        = int(head)
+            self.pca.channels[LEFT_FINGER].duty_cycle = int(self.servo_max_pwm if left_finger else self.servo_min_pwm)
+            self.pca.channels[RIGHT_FINGER].duty_cycle = int(self.servo_max_pwm if right_finger else self.servo_min_pwm)
         # fmt:on
 
 
