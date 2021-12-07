@@ -101,8 +101,8 @@ class RadiansToServo:
         ret.right_shoulder = pp[2]
         ret.right_elbow = pp[3]
 
-        ret.left_finger = controller_msg.buttons_state[6]
-        ret.right_finger = controller_msg.buttons_state[7]
+        ret.left_finger = controller_msg.button_state[6]
+        ret.right_finger = controller_msg.button_state[7]
 
         self.servo_pub.publish(ret)
 
