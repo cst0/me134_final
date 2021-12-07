@@ -52,12 +52,14 @@
   <build_depend>controller_configurator</build_depend>
   <build_depend>realsense2_camera</build_depend>
   <build_depend>rospy</build_depend>
+  <build_depend>message_generation</build_depend>
   <build_export_depend>controller_configurator</build_export_depend>
   <build_export_depend>realsense2_camera</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <exec_depend>controller_configurator</exec_depend>
   <exec_depend>realsense2_camera</exec_depend>
   <exec_depend>rospy</exec_depend>
+  <exec_depend>message_generation</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
