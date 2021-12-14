@@ -17,7 +17,6 @@ RIGHT_ELBOW = 15
 
 # fmt:on
 
-
 class ServoController(object):
     def __init__(self):
         rospy.init_node("ServoController", anonymous=False)
@@ -49,7 +48,15 @@ class ServoController(object):
                 "WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here."
             )
 
-        rospy.Subscriber("control_to_servo/out", ArmState, self.arm_control_cb)
+
+        self.left_shoulder_duty = 0
+        self.left_elbow_duty = 0
+        self.right_shoulder_duty = 0
+        self.right_elbow_duty = 0
+        self.left_finger_duty = 0
+        self.right_finger_duty = 0
+
+        rospy.Subscriber("control_to_servo", ArmState, self.arm_control_cb)
 
     def add_variables_to_self(self):
         var_names = self.ddynrec.get_variable_names()
@@ -66,7 +73,7 @@ class ServoController(object):
     def arm_control_cb(self, msg: ArmState):
         # fmt:off
         # retrieve values and ensure they're between -1 and 1
-        left_shoulder       = max(-1, min(1, msg.left_shoulder))
+        left_shoulder =  max(-1, min(1, msg.left_shoulder))
         left_elbow  = max(-1, min(1, msg.left_elbow))
         right_shoulder = max(-1, min(1, msg.right_shoulder))
         right_elbow        = max(-1, min(1, msg.right_elbow))
@@ -85,14 +92,31 @@ class ServoController(object):
         right_elbow = max(self.servo_min_pwm, min(self.servo_max_pwm, right_elbow))
         right_shoulder = max(self.servo_min_pwm, min(self.servo_max_pwm, right_shoulder))
 
+        # >>>>>> JS: use the old values if the msg gives high negative values (intentional placeholder)
+        left_shoulder = self.left_shoulder_duty if msg.left_shoulder < -2 else left_shoulder
+        left_elbow = self.left_elbow_duty if msg.left_elbow < -2 else left_elbow
+        right_shoulder = self.right_shoulder_duty if msg.right_shoulder < -2 else right_shoulder
+        right_elbow = self.right_elbow_duty if msg.right_elbow < -2 else right_elbow
+        # <<<<<<
+
         # send pwm values
         if self.pca is not None:
+            left_finger_duty = self.servo_max_pwm if left_finger else self.servo_min_pwm
+            right_finger_duty = self.servo_max_pwm if right_finger else self.servo_min_pwm
             self.pca.channels[LEFT_SHOULDER].duty_cycle = int(left_shoulder)
             self.pca.channels[LEFT_ELBOW].duty_cycle  = int(left_elbow)
             self.pca.channels[RIGHT_SHOULDER].duty_cycle = int(right_shoulder)
             self.pca.channels[RIGHT_ELBOW].duty_cycle = int(right_elbow)
-            self.pca.channels[LEFT_FINGER].duty_cycle = int(self.servo_max_pwm if left_finger else self.servo_min_pwm)
-            self.pca.channels[RIGHT_FINGER].duty_cycle = int(self.servo_max_pwm if right_finger else self.servo_min_pwm)
+            self.pca.channels[LEFT_FINGER].duty_cycle = int(left_finger_duty)
+            self.pca.channels[RIGHT_FINGER].duty_cycle = int(right_finger_duty)
+
+            # STORE PREVIOUS VALUES
+            self.left_shoulder_duty = left_shoulder
+            self.left_elbow_duty = left_elbow
+            self.right_shoulder_duty = right_shoulder
+            self.right_elbow_duty = right_elbow
+            self.left_finger_duty = left_finger_duty
+            self.right_finger_duty = right_finger_duty
         # fmt:on
 
 

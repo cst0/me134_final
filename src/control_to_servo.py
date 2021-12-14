@@ -41,7 +41,7 @@ class RadiansToServo:
         self.radian_sub = rospy.Subscriber(
             "controller", Controller, self.msg_in, queue_size=10
         )
-        self.servo_pub = rospy.Publisher(PREFIX + "/out", ArmState, queue_size=10)
+        self.servo_pub = rospy.Publisher(PREFIX, ArmState, queue_size=10)
 
         initial_msg = ArmState()
         initial_msg.left_shoulder = ZERO_SERVO
