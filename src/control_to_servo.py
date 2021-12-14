@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 import numpy as np
 from std_msgs.msg import String
@@ -16,22 +16,15 @@ ZERO_SERVO = int((MAX_SERVO - MIN_SERVO) / 2.0)
 N_JOINTS = 3  # 3 joints
 N_JOINTS *= 2  # 2 arms
 
-# Set specific joint servo ranges here. They’ll be respected in cap_and_map
 JOINT_SERVO_LIMITS = {vals: (MIN_SERVO, MAX_SERVO) for vals in range(N_JOINTS)}
-# e.g. set the range of the first joint
-# JOINT_LIMITS[0] = (-10, 10)
-
 
 def map_between_ranges(value, min0, max0, min1, max1):
     ## quick lifted from: https://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
-    # Figure out how ‘wide’ each range is
     leftSpan = max0 - min0
     rightSpan = max1 - min1
 
-    # Convert the left range into a 0-1 range (float)
     valueScaled = float(value - min0) / float(leftSpan)
 
-    # Convert the 0-1 range into a value in the right range.
     ret = min1 + (valueScaled * rightSpan)
 
     print(f"Converted {value} to {ret}")
@@ -90,7 +83,6 @@ class RadiansToServo:
         return mapped
 
     def msg_in(self, controller_msg: Controller):
-        # if any(b for b in controller_msg.button_state[4:8]):
         print(f"Heard {controller_msg}")
         ret = ArmState()
 
@@ -112,9 +104,6 @@ if __name__ == "__main__":
         rospy.init_node(PREFIX, anonymous=False)
         node = RadiansToServo()
         rospy.spin()
-        # rate = rospy.Rate(10) # 10hz
-        # while not rospy.is_shutdown():
-        #     rate.sleep()
     except rospy.ROSInterruptException:
         pass
 

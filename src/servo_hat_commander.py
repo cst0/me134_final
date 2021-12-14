@@ -2,16 +2,18 @@
 
 import rospy
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
-from me134.msg import ArmState
+from me134_final.msg import ArmState
 
 # constants representing the servo state
 # fmt:off
 LEFT_FINGER  = 0
 RIGHT_FINGER = 4
-LEFT_SHOULDER = 8
-LEFT_ELBOW  = 9
-RIGHT_ELBOW = 10
-RIGHT_SHOULDER = 11
+
+LEFT_SHOULDER  = 8
+RIGHT_SHOULDER = 9
+
+LEFT_ELBOW  = 14
+RIGHT_ELBOW = 15
 # fmt:on
 
 
