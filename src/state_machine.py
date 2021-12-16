@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import rospy
-import tf
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 from me134_final.msg import ArmState, Bar
 from geometry_msgs.msg import Point, TransformStamped
@@ -33,30 +32,30 @@ release_intermediate_right = populate_arm_msg(NO_ACTION, NO_ACTION, True, 0, 0, 
 reach_intermediate_right = populate_arm_msg(NO_ACTION, NO_ACTION, True, -1, -1, False)
 
 # >>>> Static transforms (no reason to publish)
-CAMERA_TO_RIGHT_ARM = (0., 0., 0.)
-CAMERA_TO_LEFT_ARM = (0., 0., 0.)
-static_rightTransformStamped = TransformStamped()
-static_rightTransformStamped.header.stamp = rospy.Time.now()
-static_rightTransformStamped.header.frame_id = "camera"
-static_rightTransformStamped.child_frame_id = "right_arm"
-static_rightTransformStamped.transform.translation.x = CAMERA_TO_RIGHT_ARM[0]
-static_rightTransformStamped.transform.translation.y = CAMERA_TO_RIGHT_ARM[1]
-static_rightTransformStamped.transform.translation.z = CAMERA_TO_RIGHT_ARM[2]
-static_rightTransformStamped.transform.rotation.x = 0
-static_rightTransformStamped.transform.rotation.y = 0
-static_rightTransformStamped.transform.rotation.z = 0
-static_rightTransformStamped.transform.rotation.w = 1
-static_leftTransformStamped = TransformStamped()
-static_leftTransformStamped.header.stamp = rospy.Time.now()
-static_leftTransformStamped.header.frame_id = "camera"
-static_leftTransformStamped.child_frame_id = "left_arm"
-static_leftTransformStamped.transform.translation.x = CAMERA_TO_LEFT_ARM[0]
-static_leftTransformStamped.transform.translation.y = CAMERA_TO_LEFT_ARM[1]
-static_leftTransformStamped.transform.translation.z = CAMERA_TO_LEFT_ARM[2]
-static_leftTransformStamped.transform.rotation.x = 0
-static_leftTransformStamped.transform.rotation.y = 0
-static_leftTransformStamped.transform.rotation.z = 0
-static_leftTransformStamped.transform.rotation.w = 1
+# CAMERA_TO_RIGHT_ARM = (0., 0., 0.)
+# CAMERA_TO_LEFT_ARM = (0., 0., 0.)
+# static_rightTransformStamped = TransformStamped()
+# static_rightTransformStamped.header.stamp = rospy.Time.now()
+# static_rightTransformStamped.header.frame_id = "camera"
+# static_rightTransformStamped.child_frame_id = "right_arm"
+# static_rightTransformStamped.transform.translation.x = CAMERA_TO_RIGHT_ARM[0]
+# static_rightTransformStamped.transform.translation.y = CAMERA_TO_RIGHT_ARM[1]
+# static_rightTransformStamped.transform.translation.z = CAMERA_TO_RIGHT_ARM[2]
+# static_rightTransformStamped.transform.rotation.x = 0
+# static_rightTransformStamped.transform.rotation.y = 0
+# static_rightTransformStamped.transform.rotation.z = 0
+# static_rightTransformStamped.transform.rotation.w = 1
+# static_leftTransformStamped = TransformStamped()
+# static_leftTransformStamped.header.stamp = rospy.Time.now()
+# static_leftTransformStamped.header.frame_id = "camera"
+# static_leftTransformStamped.child_frame_id = "left_arm"
+# static_leftTransformStamped.transform.translation.x = CAMERA_TO_LEFT_ARM[0]
+# static_leftTransformStamped.transform.translation.y = CAMERA_TO_LEFT_ARM[1]
+# static_leftTransformStamped.transform.translation.z = CAMERA_TO_LEFT_ARM[2]
+# static_leftTransformStamped.transform.rotation.x = 0
+# static_leftTransformStamped.transform.rotation.y = 0
+# static_leftTransformStamped.transform.rotation.z = 0
+# static_leftTransformStamped.transform.rotation.w = 1
 # <<<<<< Static transforms (no reason to publish)
 
 def translate(value, leftMin, leftMax, rightMin, rightMax):
