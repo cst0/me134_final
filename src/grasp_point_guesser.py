@@ -144,6 +144,7 @@ class GraspPointGuesser:
 
 def main():
     rospy.init_node('GraspPointGuesser')
+    rospy.loginfo("Spinning grasp point guesser")
     gpg = GraspPointGuesser()
     rospy.spin()
 
