@@ -44,7 +44,7 @@ class ServoController(object):
         rospy.init_node("ServoController", anonymous=False)
         self.ddynrec = DDynamicReconfigure("")
 
-        self.servo_self.servo_kit = Servoself.servo_kit(channels=16)
+        self.servo_kit = ServoKit(channels=16)
         self.previous_left_finger = False
         self.previous_right_finger = False
 
