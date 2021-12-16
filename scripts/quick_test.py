@@ -31,12 +31,17 @@ if __name__ == "__main__":
     # elif cmd < 0 or cmd > 180:
     #     print(f"cmd {cmd} out of range. Position control from 0 to 180.")
     elif device == LEFT_WRIST or device == RIGHT_WRIST:
-        device_name = device_dict[device]
-        print(f"Moving device {device_name} on servo channel {device} to {cmd}")
-        kit.continuous_servo[device].throttle = 0.5 if cmd >= 0 else -0.5
-        time.sleep(0.25)
-        kit.continuous_servo[device].throttle = 0.0
+        cmd = float(sys.argv[2])
+        if cmd > 1 or cmd < -1:
+            print(f"Command too great for a wrist.")
+        else:
+            device_name = device_dict[device]
+            print(f"Moving device {device_name} on servo channel {device} to {cmd}")
+            kit.continuous_servo[device].throttle = cmd
+            time.sleep(0.25)
+            kit.continuous_servo[device].throttle = 0.0
     else:
+        cmd = int(sys.argv[2])
         device_name = device_dict[device]
         print(f"Moving device {device_name} on servo channel {device} to {cmd}")
         kit.servo[device].angle = cmd

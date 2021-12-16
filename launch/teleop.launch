@@ -3,5 +3,4 @@
         <param name="servo_min_pwm" value="50" />
         <param name="servo_max_pwm" value="3950" />
     </node>
-
 </launch>
