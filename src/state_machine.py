@@ -190,8 +190,12 @@ class StateMachine:
         # joint, and reduce the problem to a planar robot.
 
         # turn shoulder to point to rung
-        eef_l_pose = populate_arm_msg(l_psi, 0, False, NO_ACTION, NO_ACTION, True)
-        eef_r_pose = populate_arm_msg(NO_ACTION, NO_ACTION, True, r_psi, 0., False)
+
+        l_psi = translate(l_psi, -180., 180., -1., 1.)
+        r_psi = translate(r_psi, -180., 180., -1., 1.)
+        
+        eef_l_pose = populate_arm_msg(l_psi, -1, False, NO_ACTION, NO_ACTION, True)
+        eef_r_pose = populate_arm_msg(NO_ACTION, NO_ACTION, True, r_psi, -1, False)
         
         return eef_l_pose, eef_r_pose
 
