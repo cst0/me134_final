@@ -88,7 +88,6 @@ state_to_string = {
 
 class StateMachine(object):
     def __init__(self):
-        rospy.init_node("StateMachine", anonymous=False)
         self.arm = rospy.Publisher("control_to_servo", ArmState, queue_size=10)
         self.detected_bar_sub = rospy.Subscriber("grasp_bar", Bar, self.detected_bar, queue_size=1)
         
@@ -205,6 +204,7 @@ class StateMachine(object):
         self.bar = msg
 
 def main():
+    rospy.init_node("StateMachine", anonymous=False)
     sm = StateMachine()
     rospy.loginfo("spinning central controller (state_machine)")
     sm.spin()
