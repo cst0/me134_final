@@ -3,7 +3,7 @@
 import pygame
 import rospy
 
-from me134.msg import Controller
+from me134_final.msg import Controller, ArmState
 
 
 class JoystickPublisher(object):
@@ -17,6 +17,9 @@ class JoystickPublisher(object):
 
         self.controller_publisher = rospy.Publisher(
             "controller", Controller, queue_size=5
+        )
+        self.arm_publisher = rospy.Publisher(
+            "control_to_servo", ArmState, queue_size=5
         )
 
     def shutdown(self):
@@ -58,6 +61,14 @@ class JoystickPublisher(object):
         msg.hat_count *= 2
 
         self.controller_publisher.publish(msg)
+        amsg = ArmState()
+        amsg.left_shoulder = msg.axis_state[0]
+        amsg.left_elbow = msg.axis_state[1]
+        amsg.left_finger = msg.button_state[6]
+        amsg.right_shoulder = msg.axis_state[2]
+        amsg.right_elbow = msg.axis_state[3]
+        amsg.right_finger = msg.button_state[7]
+        self.arm_publisher.publish(amsg)
 
 
 def main():
