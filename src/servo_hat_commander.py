@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from os import truncate
 import rospy
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 from me134_final.msg import ArmState
@@ -104,8 +105,8 @@ class ServoController(object):
         right_shoulder = max(-1, min(1, msg.right_shoulder))
         right_elbow        = max(-1, min(1, msg.right_elbow))
 
-        left_finger = msg.left_finger
-        right_finger = msg.right_finger
+        open_left_finger = msg.left_finger
+        open_right_finger = msg.right_finger
 
         # convert each of these -1 to 1 values into the range of pwm values
         left_shoulder = ((left_shoulder + 1) / 2) * (self.servo_max_pwm - self.servo_min_pwm)
@@ -139,47 +140,50 @@ class ServoController(object):
         self.servo_kit.servo[RIGHT_SHOULDER].angle = int(right_shoulder)
         self.servo_kit.servo[RIGHT_ELBOW].angle = int(right_elbow)
 
-        if (self.previous_left_finger and not left_finger):
+        left_limit_close = False
+        right_limit_close = False
+        if (open_left_finger): # we were just closed, and now we've got an open signa
             pass
-        elif (not GPIO.input(left_limit_switch) and not self.previous_left_finger):
+        elif (not GPIO.input(left_limit_switch)):
             # we got a close signal and we are not already closed
-            left_finger = True
+            # left_finger = True
+            left_limit_close = True
 
-        if (self.previous_left_finger == left_finger):
-            pass # do nothing
-        elif (not self.previous_left_finger and left_finger):
+        if (open_left_finger and self.previous_left_finger): # command to open and we're reading as closed
+            rospy.loginfo("UNWINDING LEFT")
+            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
+            rospy.sleep(UNWIND_TIME)
+            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+            self.previous_left_finger = False # open
+        elif (left_limit_close and not self.previous_left_finger):
             rospy.loginfo("WINDING LEFT")
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
             rospy.sleep(WIND_TIME_I)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = -0.5
             rospy.sleep(WIND_TIME_II)
-            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
-        elif (self.previous_left_finger and not left_finger):
-            rospy.loginfo("UNWINDING LEFT")
-            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
-            rospy.sleep(UNWIND_TIME)
-            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
-
-        if (self.previous_right_finger and not right_finger):
+            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0   
+            self.previous_left_finger = True # Closed
+        
+        if (open_right_finger): # we were just closed, and now we've got an open signal
             pass
-        elif (not GPIO.input(right_limit_switch) and not self.previous_right_finger):
+        elif (not GPIO.input(right_limit_switch)): # the limit switch is hit and we're currently open
             # we got a close signal and we are not already closed
-            right_finger = True
+            right_limit_close = True
 
-        if (self.previous_right_finger == right_finger):
-            pass # do nothing
-        elif (not self.previous_right_finger and right_finger):
+        if (open_right_finger and self.previous_right_finger):
+            rospy.loginfo("UNWINDING RIGHT")
+            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
+            rospy.sleep(UNWIND_TIME)
+            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+            self.previous_right_finger = False # open
+        elif (right_limit_close and not self.previous_right_finger):
             rospy.loginfo("WINDING RIGHT")
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
             rospy.sleep(WIND_TIME_I)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = -0.5
             rospy.sleep(WIND_TIME_II)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
-        elif (self.previous_right_finger and not right_finger):
-            rospy.loginfo("UNWINDING RIGHT")
-            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
-            rospy.sleep(UNWIND_TIME)
-            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+            self.previous_right_finger = True # Closed
 
         self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
         self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
@@ -189,8 +193,7 @@ class ServoController(object):
         self.left_elbow_duty = left_elbow
         self.right_shoulder_duty = right_shoulder
         self.right_elbow_duty = right_elbow
-        self.previous_left_finger = left_finger
-        self.previous_right_finger = right_finger
+        # self.previous_right_finger = right_finger
 
         rospy.loginfo(f"left:{left_shoulder},{left_elbow},{left_finger} right:{right_shoulder},{right_elbow},{right_finger}")
 

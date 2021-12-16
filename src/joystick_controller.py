@@ -64,10 +64,10 @@ class JoystickPublisher(object):
         amsg = ArmState()
         amsg.left_shoulder = msg.axis_state[0]
         amsg.left_elbow = msg.axis_state[1]
-        amsg.left_finger = msg.button_state[6]
+        amsg.left_finger = msg.button_state[6] # THESE MEAN OPEN NOW. no other meaning. close is automatic and based on limit switched
         amsg.right_shoulder = -msg.axis_state[2]
         amsg.right_elbow = msg.axis_state[3]
-        amsg.right_finger = msg.button_state[7]
+        amsg.right_finger = msg.button_state[7]  # THESE MEAN OPEN NOW. no other meaning. close is automatic and based on limit switched
         self.arm_publisher.publish(amsg)
 
 
