@@ -4,7 +4,6 @@ import time
 
 # Servo motor for changing the angle up or down
 kit = ServoKit(channels=16)
-servo = kit.servo[0]
 
 LEFT_SHOULDER = 0
 LEFT_ELBOW = 1
@@ -35,7 +34,7 @@ if __name__ == "__main__":
     else:
         device_name = device_dict[device]
         print(f"Moving device {device_name} on servo channel {device} to {cmd}")
-        kit.servo[device].position = cmd
+        kit.servo[device].angle = cmd
 
 
 
