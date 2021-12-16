@@ -46,4 +46,6 @@ if __name__ == "__main__":
         kit.servo[device].angle = cmd
 
 
+    kit.continuous_servo[device].throttle = 0
+
 
