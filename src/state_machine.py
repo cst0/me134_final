@@ -129,7 +129,7 @@ class StateMachine:
 
             # >>>> slide it down
             count = 0
-            while (not limit_switch()[0]) or (count < self.count_max):
+            while (not limit_switch()[0]) and (count < self.count_max):
                 msg = populate_arm_msg(NO_ACTION, self.slide_counts[count], False, NO_ACTION, NO_ACTION, True)
                 self.arm.publish(msg)
                 count += 1
@@ -150,7 +150,7 @@ class StateMachine:
 
             # >>>> slide it down
             count = 0
-            while (not limit_switch()[1]) or (count < self.count_max):
+            while (not limit_switch()[1]) and (count < self.count_max):
                 msg = populate_arm_msg(NO_ACTION, NO_ACTION, True, NO_ACTION, self.slide_counts[count], False)
                 self.arm.publish(msg)
                 count += 1
