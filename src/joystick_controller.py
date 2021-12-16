@@ -65,7 +65,7 @@ class JoystickPublisher(object):
         amsg.left_shoulder = msg.axis_state[0]
         amsg.left_elbow = msg.axis_state[1]
         amsg.left_finger = msg.button_state[6]
-        amsg.right_shoulder = msg.axis_state[2]
+        amsg.right_shoulder = -msg.axis_state[2]
         amsg.right_elbow = msg.axis_state[3]
         amsg.right_finger = msg.button_state[7]
         self.arm_publisher.publish(amsg)
