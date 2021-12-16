@@ -1,19 +1,10 @@
 <launch>
-    <node name="control_to_servo"  pkg="me134_final" type="control_to_servo.py" output="screen" >
-    </node>
-
     <node name="joystick_controller"  pkg="me134_final" type="joystick_controller.py" output="screen" >
     </node>
 
     <node name="servo_hat_commander"  pkg="me134_final" type="servo_hat_commander.py" output="screen" >
         <param name="servo_min_pwm" value="50" />
         <param name="servo_max_pwm" value="3950" />
-    </node>
-
-    <node name="state_machine"  pkg="me134_final" type="state_machine.py" output="screen" >
-    </node>
-
-    <node name="static_tf_pub"  pkg="me134_final" type="static_pub.py" output="screen" >
     </node>
 
 </launch>
