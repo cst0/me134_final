@@ -7,7 +7,7 @@ kit = ServoKit(channels=16)
 
 LEFT_SHOULDER = 0
 LEFT_ELBOW = 1
-LEFT_WRIST = 
+LEFT_WRIST = 2
 
 RIGHT_SHOULDER = 3
 RIGHT_ELBOW = 4
