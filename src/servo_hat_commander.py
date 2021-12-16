@@ -17,7 +17,7 @@ LEFT_ELBOW  = 0
 RIGHT_ELBOW = 3
 
 WIND_TIME = 0.25
-WIND_THROTTLE = 1.0
+WIND_THROTTLE = -1.0
 UNWIND_TIME = WIND_TIME
 UNWIND_THROTTLE = -WIND_THROTTLE
 
@@ -125,26 +125,26 @@ class ServoController(object):
 
         if (self.previous_left_finger == left_finger):
             pass # do nothing
-        elif (self.previous_left_finger and not left_finger):
+        elif (not self.previous_left_finger and left_finger):
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
             rospy.sleep(0.75)
-            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.5
+            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = -0.5
             rospy.sleep(0.5)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
-        elif (not self.previous_left_finger and left_finger):
+        elif (self.previous_left_finger and not left_finger):
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
             rospy.sleep(0.5)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
         if (self.previous_right_finger == right_finger):
             pass # do nothing
-        elif (self.previous_right_finger and not right_finger):
+        elif (not self.previous_right_finger and right_finger):
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
             rospy.sleep(0.75)
-            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.5
+            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = -0.5
             rospy.sleep(0.5)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
-        elif (not self.previous_right_finger and right_finger):
+        elif (self.previous_right_finger and not right_finger):
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
             rospy.sleep(0.5)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
