@@ -113,25 +113,25 @@ class StateMachine:
             rospy.sleep(0.5)
 
         if (self.state == State.RELEASE_FROM_HANG):
-            self.arm.pub(release_gripper_left)
+            self.arm.publish(release_gripper_left)
             rospy.sleep(1)
-            self.arm.pub(release_intermediate_left)
+            self.arm.publish(release_intermediate_left)
             rospy.sleep(1)
             self.change_state(State.REACH_FROM_HANG)
             pass
         if (self.state == State.REACH_FROM_HANG):
-            self.arm.pub(reach_intermediate_left)
+            self.arm.publish(reach_intermediate_left)
             rospy.sleep(1)
             # TODO: last step of reach with eef goal position in mind
             # ASSUMING WE'VE GRASPED # TODO: check the contact sensor in the palm 
-            self.arm.pub(eef_l_pose)
+            self.arm.publish(eef_l_pose)
             rospy.sleep(1)
 
             # >>>> slide it down
             count = 0
             while (not limit_switch()[0]) or (count < self.count_max):
                 msg = populate_arm_msg(NO_ACTION, self.slide_counts[count], False, NO_ACTION, NO_ACTION, True)
-                self.arm.pub(msg)
+                self.arm.publish(msg)
                 count += 1
                 rospy.sleep(0.5)
             # <<<< now stop the slide
@@ -139,25 +139,25 @@ class StateMachine:
             self.change_state(State.RETURN_TO_HANG)
             pass
         if (self.state == State.RETURN_TO_HANG):
-            self.arm.pub(release_gripper_right)
+            self.arm.publish(release_gripper_right)
             rospy.sleep(1)
-            self.arm.pub(release_intermediate_right)
+            self.arm.publish(release_intermediate_right)
             rospy.sleep(1)
-            self.arm.pub(reach_intermediate_right)
+            self.arm.publish(reach_intermediate_right)
             rospy.sleep(1)
             # TODO: Reach to same eef position as left (but shifted over)
-            self.arm.pub(eef_r_pose)
+            self.arm.publish(eef_r_pose)
 
             # >>>> slide it down
             count = 0
             while (not limit_switch()[1]) or (count < self.count_max):
                 msg = populate_arm_msg(NO_ACTION, NO_ACTION, True, NO_ACTION, self.slide_counts[count], False)
-                self.arm.pub(msg)
+                self.arm.publish(msg)
                 count += 1
                 rospy.sleep(0.5)
             # <<<< now stop the slide
 
-            self.arm.pub(pull_up_msg)
+            self.arm.publish(pull_up_msg)
             rospy.sleep(1)
             self.change_state(State.DUAL_HANG)
 
