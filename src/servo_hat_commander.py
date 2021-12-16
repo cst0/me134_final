@@ -181,8 +181,8 @@ class ServoController(object):
             rospy.sleep(UNWIND_TIME)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
 
-        self.servo_self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
-        self.servo_self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+        self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+        self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
         # STORE PREVIOUS VALUES
 
         self.left_shoulder_duty = left_shoulder
