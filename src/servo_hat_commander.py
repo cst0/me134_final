@@ -33,9 +33,9 @@ class ServoController(object):
         self.previous_right_finger = False
 
         self.servo_min_pwm: int = 0
-        self.servo_max_pwm: int = 0
-        self.ddynrec.add_variable("servo_min_pwm", "servo_min_pwm", 0, 0, 2 ** 12)
-        self.ddynrec.add_variable("servo_max_pwm", "servo_max_pwm", 0, 0, 2 ** 12)
+        self.servo_max_pwm: int = 180
+        # self.ddynrec.add_variable("servo_min_pwm", "servo_min_pwm", 0, 0, 2 ** 12)
+        # self.ddynrec.add_variable("servo_max_pwm", "servo_max_pwm", 0, 0, 2 ** 12)
 
         self.add_variables_to_self()
         self.ddynrec.start(self.dyn_rec_callback)
@@ -43,20 +43,20 @@ class ServoController(object):
         self.simulation_mode = True
         self.i2c_bus = None
         self.pca = None
-        try:
-            from board import SCL, SDA  # type:ignore
-            import busio  # type:ignore
-            from adafruit_pca9685 import PCA9685  # type:ignore
+        # try:
+        #     from board import SCL, SDA  # type:ignore
+        #     import busio  # type:ignore
+        #     from adafruit_pca9685 import PCA9685  # type:ignore
 
-            self.i2c_bus = busio.I2C(SCL, SDA)
-            self.pca = PCA9685(self.i2c_bus)
-            self.pca.frequency = 60
+        #     self.i2c_bus = busio.I2C(SCL, SDA)
+        #     self.pca = PCA9685(self.i2c_bus)
+        #     self.pca.frequency = 60
 
-            self.simulation_mode = False
-        except ImportError:
-            print(
-                "WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here."
-            )
+        #     self.simulation_mode = False
+        # except ImportError:
+        #     print(
+        #         "WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here."
+        #     )
 
 
         self.left_shoulder_duty = 0
@@ -110,47 +110,53 @@ class ServoController(object):
         # <<<<<<
 
         # send pwm values
-        if self.pca is not None:
-            self.pca.channels[LEFT_SHOULDER].duty_cycle = int(left_shoulder)
-            self.pca.channels[LEFT_ELBOW].duty_cycle  = int(left_elbow)
-            self.pca.channels[RIGHT_SHOULDER].duty_cycle = int(right_shoulder)
-            self.pca.channels[RIGHT_ELBOW].duty_cycle = int(right_elbow)
+        # if self.pca is not None:
+            # self.pca.channels[LEFT_SHOULDER].duty_cycle = int(left_shoulder)
+            # self.pca.channels[LEFT_ELBOW].duty_cycle  = int(left_elbow)
+            # self.pca.channels[RIGHT_SHOULDER].duty_cycle = int(right_shoulder)
+            # self.pca.channels[RIGHT_ELBOW].duty_cycle = int(right_elbow)
 
-            self.pca.channels[LEFT_FINGER].duty_cycle = int(2**11)
-            self.pca.channels[RIGHT_FINGER].duty_cycle = int(2**11)
+            # self.pca.channels[LEFT_FINGER].duty_cycle = int(2**11)
+            # self.pca.channels[RIGHT_FINGER].duty_cycle = int(2**11)
+        self.servo_kit.servo[LEFT_SHOULDER].angle = int(left_shoulder)
+        self.servo_kit.servo[LEFT_ELBOW].angle  = int(left_elbow)
+        self.servo_kit.servo[RIGHT_SHOULDER].angle = int(right_shoulder)
+        self.servo_kit.servo[RIGHT_ELBOW].angle = int(right_elbow)
 
-            # if (self.previous_left_finger == left_finger):
-            #     pass # do nothing
-            # elif (self.previous_left_finger and not left_finger):
-            #     self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
-            #     rospy.sleep(UNWIND_TIME)
-            #     self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
-            # elif (not self.previous_left_finger and left_finger):
-            #     self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
-            #     rospy.sleep(WIND_TIME)
-            #     self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+        if (self.previous_left_finger == left_finger):
+            pass # do nothing
+        elif (self.previous_left_finger and not left_finger):
+            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
+            rospy.sleep(UNWIND_TIME)
+            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+        elif (not self.previous_left_finger and left_finger):
+            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
+            rospy.sleep(WIND_TIME)
+            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
-            # if (self.previous_right_finger == right_finger):
-            #     pass # do nothing
-            # elif (self.previous_right_finger and not right_finger):
-            #     self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
-            #     rospy.sleep(UNWIND_TIME)
-            #     self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
-            # elif (not self.previous_right_finger and right_finger):
-            #     self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
-            #     rospy.sleep(WIND_TIME)
-            #     self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+        if (self.previous_right_finger == right_finger):
+            pass # do nothing
+        elif (self.previous_right_finger and not right_finger):
+            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
+            rospy.sleep(UNWIND_TIME)
+            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+        elif (not self.previous_right_finger and right_finger):
+            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
+            rospy.sleep(WIND_TIME)
+            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
 
-            # self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
-            # self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
-            # STORE PREVIOUS VALUES
+        self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+        self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+        # STORE PREVIOUS VALUES
 
-            self.left_shoulder_duty = left_shoulder
-            self.left_elbow_duty = left_elbow
-            self.right_shoulder_duty = right_shoulder
-            self.right_elbow_duty = right_elbow
-            self.previous_left_finger = left_finger
-            self.previous_right_finger = right_finger
+        self.left_shoulder_duty = left_shoulder
+        self.left_elbow_duty = left_elbow
+        self.right_shoulder_duty = right_shoulder
+        self.right_elbow_duty = right_elbow
+        self.previous_left_finger = left_finger
+        self.previous_right_finger = right_finger
+
+        rospy.loginfo(f"left:{left_shoulder},{left_elbow},{left_finger} right:{right_shoulder},{right_elbow},{right_finger}")
 
         # fmt:on
 
