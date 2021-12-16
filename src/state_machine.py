@@ -209,3 +209,6 @@ def main():
     rospy.loginfo("spinning central controller (state_machine)")
     sm.spin()
     rospy.loginfo("central controller shutting down.")
+
+if __name__ == "__main__":
+    main()
