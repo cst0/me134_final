@@ -139,7 +139,9 @@ class ServoController(object):
         self.servo_self.servo_kit.servo[RIGHT_SHOULDER].angle = int(right_shoulder)
         self.servo_self.servo_kit.servo[RIGHT_ELBOW].angle = int(right_elbow)
 
-        if (not GPIO.input(left_limit_switch) and not self.previous_left_finger):
+        if (self.previous_left_finger and not left_finger):
+            pass
+        elif (not GPIO.input(left_limit_switch) and not self.previous_left_finger):
             # we got a close signal and we are not already closed
             left_finger = True
 
@@ -158,7 +160,9 @@ class ServoController(object):
             rospy.sleep(UNWIND_TIME)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
-        if (not GPIO.input(right_limit_switch) and not self.previous_right_finger):
+        if (self.previous_right_finger and not right_finger):
+            pass
+        elif (not GPIO.input(right_limit_switch) and not self.previous_right_finger):
             # we got a close signal and we are not already closed
             right_finger = True
 
