@@ -181,7 +181,7 @@ class StateMachine:
     def get_grasping_pose(self):
         left, right, l_psi, r_psi = self.bar_to_cartesian()
         if (left is None):
-            return None
+            return None, None
 
         
         # Use the static transform from the camera (X out of lens, Y up-down, Z left-right) to get the target position in the arm shoulder
