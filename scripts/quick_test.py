@@ -7,7 +7,7 @@ kit = ServoKit(channels=16)
 
 LEFT_SHOULDER = 0
 LEFT_ELBOW = 1
-LEFT_WRIST = 2
+LEFT_WRIST = 7
 
 RIGHT_SHOULDER = 3
 RIGHT_ELBOW = 4
@@ -22,7 +22,6 @@ RIGHT_ELBOW:"RIGHT_ELBOW",
 RIGHT_WRIST:"RIGHT_WRIST"
 }
 
-
 if __name__ == "__main__":
     device = int(sys.argv[1])
     cmd = int(sys.argv[2])
@@ -34,7 +33,7 @@ if __name__ == "__main__":
     elif device == LEFT_WRIST or device == RIGHT_WRIST:
         device_name = device_dict[device]
         print(f"Moving device {device_name} on servo channel {device} to {cmd}")
-        kit.continuous_servo[device].throttle = 0.5
+        kit.continuous_servo[device].throttle = 0.5 if cmd >= 0 else -0.5
         time.sleep(0.25)
         kit.continuous_servo[device].throttle = 0.0
     else:
