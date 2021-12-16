@@ -3,6 +3,7 @@
 import rospy
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 from me134_final.msg import ArmState
+from adafruit_servokit import ServoKit
 
 # constants representing the servo state
 # fmt:off
@@ -15,12 +16,19 @@ RIGHT_SHOULDER = 0
 LEFT_ELBOW  = 2
 RIGHT_ELBOW = 3
 
+WIND_TIME = 0.25
+UNWIND_TIME = 0.25
+
 # fmt:on
 
 class ServoController(object):
     def __init__(self):
         rospy.init_node("ServoController", anonymous=False)
         self.ddynrec = DDynamicReconfigure("")
+
+        self.servo_kit = ServoKit(channels=16)
+        self.previous_left_finger = False
+        self.previous_right_finger = False
 
         self.servo_min_pwm: int = 0
         self.servo_max_pwm: int = 0
@@ -101,22 +109,30 @@ class ServoController(object):
 
         # send pwm values
         if self.pca is not None:
-            left_finger_duty = self.servo_max_pwm if left_finger else self.servo_min_pwm
-            right_finger_duty = self.servo_max_pwm if right_finger else self.servo_min_pwm
             self.pca.channels[LEFT_SHOULDER].duty_cycle = int(left_shoulder)
             self.pca.channels[LEFT_ELBOW].duty_cycle  = int(left_elbow)
             self.pca.channels[RIGHT_SHOULDER].duty_cycle = int(right_shoulder)
             self.pca.channels[RIGHT_ELBOW].duty_cycle = int(right_elbow)
-            self.pca.channels[LEFT_FINGER].duty_cycle = int(left_finger_duty)
-            self.pca.channels[RIGHT_FINGER].duty_cycle = int(right_finger_duty)
+
+            # self.pca.channels[LEFT_FINGER].duty_cycle = int(left_finger_duty)
+            # self.pca.channels[RIGHT_FINGER].duty_cycle = int(right_finger_duty)
+
+            if (self.previous_left_finger == left_finger):
+                pass # do nothing
+            elif (self.previous_left_finger and not left_finger):
+                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.5
+                rospy.sleep(UNWIND_TIME)
+                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+            elif (not self.previous_left_finger and left_finger):
+                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = -0.5
+                rospy.sleep(WIND_TIME)
+                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
             # STORE PREVIOUS VALUES
             self.left_shoulder_duty = left_shoulder
             self.left_elbow_duty = left_elbow
             self.right_shoulder_duty = right_shoulder
             self.right_elbow_duty = right_elbow
-            self.left_finger_duty = left_finger_duty
-            self.right_finger_duty = right_finger_duty
         # fmt:on
 
 
