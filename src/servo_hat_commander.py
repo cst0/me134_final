@@ -133,7 +133,7 @@ class ServoController(object):
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
         elif (not self.previous_left_finger and left_finger):
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
-            rospy.sleep(0.75)
+            rospy.sleep(0.5)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = -0.5
             rospy.sleep(0.5)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
@@ -148,7 +148,7 @@ class ServoController(object):
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
         elif (not self.previous_right_finger and right_finger):
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
-            rospy.sleep(0.75)
+            rospy.sleep(0.5)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = -0.5
             rospy.sleep(0.5)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
