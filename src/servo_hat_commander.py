@@ -17,7 +17,9 @@ LEFT_ELBOW  = 2
 RIGHT_ELBOW = 3
 
 WIND_TIME = 0.25
-UNWIND_TIME = 0.25
+WIND_THROTTLE = 0.25
+UNWIND_TIME = WIND_TIME
+UNWIND_THROTTLE = -WIND_THROTTLE
 
 # fmt:on
 
@@ -120,19 +122,34 @@ class ServoController(object):
             if (self.previous_left_finger == left_finger):
                 pass # do nothing
             elif (self.previous_left_finger and not left_finger):
-                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.5
+                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
                 rospy.sleep(UNWIND_TIME)
                 self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
             elif (not self.previous_left_finger and left_finger):
-                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = -0.5
+                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
                 rospy.sleep(WIND_TIME)
                 self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
+            if (self.previous_right_finger == right_finger):
+                pass # do nothing
+            elif (self.previous_right_finger and not right_finger):
+                self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
+                rospy.sleep(UNWIND_TIME)
+                self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+            elif (not self.previous_right_finger and right_finger):
+                self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
+                rospy.sleep(WIND_TIME)
+                self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+
             # STORE PREVIOUS VALUES
+            
             self.left_shoulder_duty = left_shoulder
             self.left_elbow_duty = left_elbow
             self.right_shoulder_duty = right_shoulder
             self.right_elbow_duty = right_elbow
+            self.previous_left_finger = left_finger
+            self.previous_right_finger = right_finger
+
         # fmt:on
 
 

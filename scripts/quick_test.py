@@ -7,7 +7,7 @@ kit = ServoKit(channels=16)
 
 LEFT_SHOULDER = 0
 LEFT_ELBOW = 1
-LEFT_WRIST = 7
+LEFT_WRIST = 
 
 RIGHT_SHOULDER = 3
 RIGHT_ELBOW = 4
@@ -28,8 +28,8 @@ if __name__ == "__main__":
 
     if device not in device_dict:
         print(f"ERROR: device {device} not recognized")
-    elif cmd < 0 or cmd > 180:
-        print(f"cmd {cmd} out of range. Position control from 0 to 180.")
+    # elif cmd < 0 or cmd > 180:
+    #     print(f"cmd {cmd} out of range. Position control from 0 to 180.")
     elif device == LEFT_WRIST or device == RIGHT_WRIST:
         device_name = device_dict[device]
         print(f"Moving device {device_name} on servo channel {device} to {cmd}")
