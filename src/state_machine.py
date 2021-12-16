@@ -207,7 +207,7 @@ def main():
     rospy.loginfo("spinning central controller (state_machine)")
     while not rospy.is_shutdown():
         sm.loop()
-        rospy.spin_once()
+        rospy.sleep(0.01)
     # rospy.spin()
     rospy.loginfo("central controller shutting down.")
 
