@@ -92,7 +92,7 @@ class StateMachine(object):
         self.arm = rospy.Publisher("control_to_servo", ArmState, queue_size=10)
         self.detected_bar_sub = rospy.Subscriber("grasp_bar", Bar, self.detected_bar, queue_size=1)
         
-        self.state = State.BOTH_ARMS_HANG
+        self.state = State.DUAL_HANG
         self.eef_l_pose = None
         self.eef_r_pose = None
         self.bar = None
