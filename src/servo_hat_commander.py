@@ -5,6 +5,20 @@ from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 from me134_final.msg import ArmState
 from adafruit_servoself.servo_kit import Servoself.servo_kit
 
+# import the libraries
+import RPi.GPIO as GPIO
+from time import sleep
+GPIO.setmode(GPIO.BCM)   
+
+# set the pin numbers to be used from Broadcom chip
+right_limit_switch = 4 # assign a variable name to pin 17
+GPIO.setup(right_limit_switch, GPIO.IN)
+GPIO.setup(right_limit_switch, GPIO.OUT, initial=GPIO.HIGH) # set the initial output of pin 4 to be LOW
+left_limit_switch = 27 # assign a variable name to pin 17
+GPIO.setup(left_limit_switch, GPIO.IN)
+GPIO.setup(left_limit_switch, GPIO.OUT, initial=GPIO.HIGH) # set the initial output of pin 4 to be LOW
+
+
 # constants representing the servo state
 # fmt:off
 
@@ -125,6 +139,10 @@ class ServoController(object):
         self.servo_self.servo_kit.servo[RIGHT_SHOULDER].angle = int(right_shoulder)
         self.servo_self.servo_kit.servo[RIGHT_ELBOW].angle = int(right_elbow)
 
+        if (not GPIO.input(left_limit_switch) and not self.previous_left_finger):
+            # we got a close signal and we are not already closed
+            left_finger = True
+
         if (self.previous_left_finger == left_finger):
             pass # do nothing
         elif (not self.previous_left_finger and left_finger):
@@ -139,6 +157,10 @@ class ServoController(object):
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
             rospy.sleep(UNWIND_TIME)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+
+        if (not GPIO.input(right_limit_switch) and not self.previous_right_finger):
+            # we got a close signal and we are not already closed
+            right_finger = True
 
         if (self.previous_right_finger == right_finger):
             pass # do nothing

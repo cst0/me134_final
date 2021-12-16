@@ -28,29 +28,29 @@ if __name__ == "__main__":
     from time import sleep
     GPIO.setmode(GPIO.BCM)                   
     # set the pin numbers to be used from Broadcom chip
-    limit_switch = 4 # assign a variable name to pin 17
+    limit_switch = 27 # assign a variable name to pin 17
     GPIO.setup(limit_switch, GPIO.IN)
-    GPIO.setup(4, GPIO.OUT, initial=GPIO.HIGH) # set the initial output of pin 4 to be LOW
+    GPIO.setup(27, GPIO.OUT, initial=GPIO.HIGH) # set the initial output of pin 4 to be LOW
 
     close = False
-    device = 1
+    device = 0
     while not close:
         close = not GPIO.input(limit_switch)
         sleep(0.2)
         #    GPIO.output(ledpin, not GPIO.input(pushpin)) # read the inverse value of input pin 17
 
-    # if (device == 0 and close):
-    #     print("WINDING LEFT")
-    #     kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
-    #     time.sleep(WIND_TIME_I)
-    #     kit.continuous_servo[LEFT_FINGER].throttle = -0.5
-    #     time.sleep(WIND_TIME_II)
-    #     kit.continuous_servo[LEFT_FINGER].throttle = 0.0
-    # elif (device == 0 and open):
-    #     print("UNWINDING LEFT")
-    #     kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
-    #     time.sleep(UNWIND_TIME)
-    #     kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+    if (device == 0 and close):
+        print("WINDING LEFT")
+        kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
+        time.sleep(WIND_TIME_I)
+        kit.continuous_servo[LEFT_FINGER].throttle = -0.5
+        time.sleep(WIND_TIME_II)
+        kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+    elif (device == 0 and open):
+        print("UNWINDING LEFT")
+        kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
+        time.sleep(UNWIND_TIME)
+        kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
     if (device == 1 and close):
         print("WINDING RIGHT")
