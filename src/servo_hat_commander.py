@@ -3,7 +3,7 @@
 import rospy
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 from me134_final.msg import ArmState
-from adafruit_servokit import ServoKit
+from adafruit_servoself.servo_kit import Servoself.servo_kit
 
 # constants representing the servo state
 # fmt:off
@@ -17,9 +17,10 @@ RIGHT_ELBOW = 4
 RIGHT_FINGER = 5
 
 
-WIND_TIME = 0.25
+WIND_TIME_I = 0.65
+WIND_TIME_II = 0.55
 WIND_THROTTLE = -1.0
-UNWIND_TIME = WIND_TIME
+UNWIND_TIME = 1.025
 UNWIND_THROTTLE = -WIND_THROTTLE
 
 # fmt:on
@@ -29,7 +30,7 @@ class ServoController(object):
         rospy.init_node("ServoController", anonymous=False)
         self.ddynrec = DDynamicReconfigure("")
 
-        self.servo_kit = ServoKit(channels=16)
+        self.servo_self.servo_kit = Servoself.servo_kit(channels=16)
         self.previous_left_finger = False
         self.previous_right_finger = False
 
@@ -55,7 +56,7 @@ class ServoController(object):
 
         #     self.simulation_mode = False
         # except ImportError:
-        #     print(
+        #     rospy.info(
         #         "WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here."
         #     )
 
@@ -119,43 +120,43 @@ class ServoController(object):
 
             # self.pca.channels[LEFT_FINGER].duty_cycle = int(2**11)
             # self.pca.channels[RIGHT_FINGER].duty_cycle = int(2**11)
-        self.servo_kit.servo[LEFT_SHOULDER].angle = int(left_shoulder)
-        self.servo_kit.servo[LEFT_ELBOW].angle  = int(left_elbow)
-        self.servo_kit.servo[RIGHT_SHOULDER].angle = int(right_shoulder)
-        self.servo_kit.servo[RIGHT_ELBOW].angle = int(right_elbow)
+        self.servo_self.servo_kit.servo[LEFT_SHOULDER].angle = int(left_shoulder)
+        self.servo_self.servo_kit.servo[LEFT_ELBOW].angle  = int(left_elbow)
+        self.servo_self.servo_kit.servo[RIGHT_SHOULDER].angle = int(right_shoulder)
+        self.servo_self.servo_kit.servo[RIGHT_ELBOW].angle = int(right_elbow)
 
         if (self.previous_left_finger == left_finger):
             pass # do nothing
         elif (not self.previous_left_finger and left_finger):
-            rospy.loginfo("WINDING LEFT")
+            rospy.info("WINDING LEFT")
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
-            rospy.sleep(0.65)
+            rospy.sleep(WIND_TIME_I)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = -0.5
-            rospy.sleep(0.5)
+            rospy.sleep(WIND_TIME_II)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
         elif (self.previous_left_finger and not left_finger):
-            rospy.loginfo("UNWINDING LEFT")
+            rospy.info("UNWINDING LEFT")
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
-            rospy.sleep(0.65)
+            rospy.sleep(UNWIND_TIME)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
         if (self.previous_right_finger == right_finger):
             pass # do nothing
         elif (not self.previous_right_finger and right_finger):
-            rospy.loginfo("WINDING RIGHT")
+            rospy.info("WINDING RIGHT")
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
-            rospy.sleep(0.65)
+            rospy.sleep(WIND_TIME_I)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = -0.5
-            rospy.sleep(0.5)
+            rospy.sleep(WIND_TIME_II)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
         elif (self.previous_right_finger and not right_finger):
-            rospy.loginfo("UNWINDING RIGHT")
+            rospy.info("UNWINDING RIGHT")
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
-            rospy.sleep(0.65)
+            rospy.sleep(UNWIND_TIME)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
 
-        self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
-        self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+        self.servo_self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+        self.servo_self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
         # STORE PREVIOUS VALUES
 
         self.left_shoulder_duty = left_shoulder
