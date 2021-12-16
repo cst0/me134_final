@@ -104,13 +104,13 @@ class StateMachine:
         if (self.state == State.DUAL_HANG):
             # Scan 
             # Determine position we want to move to
-            if (self.bar is None):
+            if (self.bar is not None):
                 eef_l_pose, eef_r_pose = self.get_grasping_pose()
                 if (eef_l_pose is not None):
                     self.change_state(State.RELEASE_FROM_HANG)
                 else:
                     print(f"No eef found. Rescanning...")
-            rospy.sleep(0.05)
+            rospy.sleep(0.5)
 
         if (self.state == State.RELEASE_FROM_HANG):
             self.arm.pub(release_gripper_left)
