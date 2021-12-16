@@ -1,6 +1,6 @@
 from adafruit_servokit import ServoKit
 import sys
-import time
+import time 
 
 # Servo motor for changing the angle up or down
 kit = ServoKit(channels=16)
