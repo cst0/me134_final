@@ -29,8 +29,8 @@ if __name__ == "__main__":
     GPIO.setmode(GPIO.BCM)                   
     # set the pin numbers to be used from Broadcom chip
     limit_switch = 4 # assign a variable name to pin 17
-    GPIO.setup(limit_switch, GPIO.IN) # set GPIO pin 17 as Input
-    GPIO.setup(4, GPIO.OUT, initial=GPIO.LOW) # set the initial output of pin 4 to be LOW
+    GPIO.setup(limit_switch, GPIO.IN)
+    GPIO.setup(4, GPIO.OUT, initial=GPIO.HIGH) # set the initial output of pin 4 to be LOW
 
     while True:
         print(GPIO.input(limit_switch))
