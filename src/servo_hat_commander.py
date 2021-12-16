@@ -70,7 +70,7 @@ class ServoController(object):
 
         #     self.simulation_mode = False
         # except ImportError:
-        #     rospy.info(
+        #     rospy.loginfo(
         #         "WARN: Could not set up hardware dependencies. Assuming we're in sim mode and going from here."
         #     )
 
@@ -148,14 +148,14 @@ class ServoController(object):
         if (self.previous_left_finger == left_finger):
             pass # do nothing
         elif (not self.previous_left_finger and left_finger):
-            rospy.info("WINDING LEFT")
+            rospy.loginfo("WINDING LEFT")
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
             rospy.sleep(WIND_TIME_I)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = -0.5
             rospy.sleep(WIND_TIME_II)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
         elif (self.previous_left_finger and not left_finger):
-            rospy.info("UNWINDING LEFT")
+            rospy.loginfo("UNWINDING LEFT")
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
             rospy.sleep(UNWIND_TIME)
             self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
@@ -169,14 +169,14 @@ class ServoController(object):
         if (self.previous_right_finger == right_finger):
             pass # do nothing
         elif (not self.previous_right_finger and right_finger):
-            rospy.info("WINDING RIGHT")
+            rospy.loginfo("WINDING RIGHT")
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
             rospy.sleep(WIND_TIME_I)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = -0.5
             rospy.sleep(WIND_TIME_II)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
         elif (self.previous_right_finger and not right_finger):
-            rospy.info("UNWINDING RIGHT")
+            rospy.loginfo("UNWINDING RIGHT")
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
             rospy.sleep(UNWIND_TIME)
             self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
