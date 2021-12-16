@@ -20,8 +20,8 @@ def populate_arm_msg(left_shoulder, left_elbow, left_finger, right_shoulder, rig
     msg.right_finger = right_finger
     return msg
 
-pull_up_msg = populate_arm_msg(1,1,True,1,1,True)
-lower_down_msg = populate_arm_msg(-1,-1,True,-1,-1,True)
+pull_up_msg = populate_arm_msg(-1,1,True,-1,1,True)
+lower_down_msg = populate_arm_msg(0,0,True,0,0,True)
 
 release_gripper_left = populate_arm_msg(NO_ACTION, NO_ACTION, False, NO_ACTION, NO_ACTION, True)
 release_intermediate_left = populate_arm_msg(0, 0, False, NO_ACTION, NO_ACTION, True)

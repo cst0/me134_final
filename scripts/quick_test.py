@@ -24,7 +24,6 @@ RIGHT_WRIST:"RIGHT_WRIST"
 
 if __name__ == "__main__":
     device = int(sys.argv[1])
-    cmd = int(sys.argv[2])
 
     if device not in device_dict:
         print(f"ERROR: device {device} not recognized")
