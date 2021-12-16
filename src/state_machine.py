@@ -159,6 +159,8 @@ class StateMachine:
 
             self.arm.publish(pull_up_msg)
             rospy.sleep(1)
+
+            self.bar = None
             self.change_state(State.DUAL_HANG)
 
     def bar_to_cartesian(self):
