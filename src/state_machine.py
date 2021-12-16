@@ -99,6 +99,7 @@ class StateMachine(object):
         self.count_max = 10
         self.slide_counts = list(np.linspace(-1, 1, self.count_max))
 
+    def loop(self):
         while not rospy.is_shutdown():
             rospy.loginfo(f"State is {state_to_string[self.state]}")
             if (self.state == State.DUAL_HANG):
@@ -207,7 +208,8 @@ def main():
     rospy.init_node("StateMachine", anonymous=False)
     sm = StateMachine()
     rospy.loginfo("spinning central controller (state_machine)")
-    sm.spin()
+    sm.loop()
+    # rospy.spin()
     rospy.loginfo("central controller shutting down.")
 
 if __name__ == "__main__":
