@@ -134,10 +134,10 @@ class ServoController(object):
 
             # self.pca.channels[LEFT_FINGER].duty_cycle = int(2**11)
             # self.pca.channels[RIGHT_FINGER].duty_cycle = int(2**11)
-        self.servo_self.servo_kit.servo[LEFT_SHOULDER].angle = int(left_shoulder)
-        self.servo_self.servo_kit.servo[LEFT_ELBOW].angle  = int(left_elbow)
-        self.servo_self.servo_kit.servo[RIGHT_SHOULDER].angle = int(right_shoulder)
-        self.servo_self.servo_kit.servo[RIGHT_ELBOW].angle = int(right_elbow)
+        self.servo_kit.servo[LEFT_SHOULDER].angle = int(left_shoulder)
+        self.servo_kit.servo[LEFT_ELBOW].angle  = int(left_elbow)
+        self.servo_kit.servo[RIGHT_SHOULDER].angle = int(right_shoulder)
+        self.servo_kit.servo[RIGHT_ELBOW].angle = int(right_elbow)
 
         if (self.previous_left_finger and not left_finger):
             pass
