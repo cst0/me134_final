@@ -7,7 +7,7 @@
     <node name="state_machine"  pkg="me134_final" type="state_machine.py" output="screen" >
     </node>
 
-    <node name="static_tf_pub"  pkg="me134_final" type="static_pub.py" output="screen" >
-    </node>
+    <!-- <node name="static_tf_pub"  pkg="me134_final" type="static_pub.py" output="screen" >
+    </node> -->
 
 </launch>

@@ -17,7 +17,8 @@ CAMERA_TO_LEFT_ARM = (0., 0., 0.)
 
 if __name__ == '__main__':
     rospy.init_node('static_pub')
-    broadcaster = tf2_ros.StaticTransformBroadcaster()
+    leftbroadcaster = tf2_ros.StaticTransformBroadcaster()
+    rightbroadcaster = tf2_ros.StaticTransformBroadcaster()
     
     static_rightTransformStamped = geometry_msgs.msg.TransformStamped()
     static_rightTransformStamped.header.stamp = rospy.Time.now()
@@ -43,6 +44,6 @@ if __name__ == '__main__':
     static_leftTransformStamped.transform.rotation.z = 0
     static_leftTransformStamped.transform.rotation.w = 1
 
-    broadcaster.sendTransform(static_rightTransformStamped)
-    broadcaster.sendTransform(static_leftTransformStamped)
+    leftbroadcaster.sendTransform(static_rightTransformStamped)
+    rightbroadcaster.sendTransform(static_leftTransformStamped)
     rospy.spin()
