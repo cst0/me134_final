@@ -3,7 +3,7 @@
 import rospy
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 from me134_final.msg import ArmState
-from adafruit_servoself.servo_kit import Servoself.servo_kit
+from adafruit_servokit import ServoKit
 
 # import the libraries
 import RPi.GPIO as GPIO
