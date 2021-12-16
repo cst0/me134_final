@@ -12,7 +12,7 @@ RIGHT_FINGER = 5
 
 WIND_TIME = 0.25
 WIND_THROTTLE = -1.0
-UNWIND_TIME = WIND_TIME
+UNWIND_TIME = 1.0
 UNWIND_THROTTLE = -WIND_THROTTLE
 
 if __name__ == "__main__":
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     elif (device == 0 and open):
         print("UNWINDING LEFT")
         kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
-        time.sleep(0.65)
+        time.sleep(UNWIND_TIME)
         kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
     if (device == 1 and close):
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     elif (device == 1 and open):
         print("UNWINDING RIGHT")
         kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
-        time.sleep(0.65)
+        time.sleep(UNWIND_TIME)
         kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
 
     kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
