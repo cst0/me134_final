@@ -7,14 +7,15 @@ from adafruit_servokit import ServoKit
 
 # constants representing the servo state
 # fmt:off
+
+LEFT_SHOULDER  = 0
+LEFT_ELBOW  = 1
 LEFT_FINGER  = 2
-RIGHT_FINGER = 4
 
-LEFT_SHOULDER  = 1
-RIGHT_SHOULDER = 5
+RIGHT_SHOULDER = 3
+RIGHT_ELBOW = 4
+RIGHT_FINGER = 5
 
-LEFT_ELBOW  = 0
-RIGHT_ELBOW = 3
 
 WIND_TIME = 0.25
 WIND_THROTTLE = -1.0
