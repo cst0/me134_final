@@ -100,69 +100,66 @@ class StateMachine(object):
         self.slide_counts = list(np.linspace(-1, 1, self.count_max))
 
     def loop(self):
-        while not rospy.is_shutdown():
-            rospy.loginfo(f"State is {state_to_string[self.state]}")
-            if (self.state == State.DUAL_HANG):
-                # Scan 
-                # Determine position we want to move to
-                if (self.bar is None):
-                    eef_l_pose, eef_r_pose = self.get_grasping_pose()
-                    if (eef_l_pose is not None):
-                        self.change_state(State.RELEASE_FROM_HANG)
-                    else:
-                        print(f"No eef found. Rescanning...")
-                rospy.sleep(0.05)
+        rospy.loginfo(f"State is {state_to_string[self.state]}")
+        if (self.state == State.DUAL_HANG):
+            # Scan 
+            # Determine position we want to move to
+            if (self.bar is None):
+                eef_l_pose, eef_r_pose = self.get_grasping_pose()
+                if (eef_l_pose is not None):
+                    self.change_state(State.RELEASE_FROM_HANG)
+                else:
+                    print(f"No eef found. Rescanning...")
+            rospy.sleep(0.05)
 
-            if (self.state == State.RELEASE_FROM_HANG):
-                self.arm.pub(release_gripper_left)
-                rospy.sleep(1)
-                self.arm.pub(release_intermediate_left)
-                rospy.sleep(1)
-                self.change_state(State.REACH_FROM_HANG)
-                pass
-            if (self.state == State.REACH_FROM_HANG):
-                self.arm.pub(reach_intermediate_left)
-                rospy.sleep(1)
-                # TODO: last step of reach with eef goal position in mind
-                # ASSUMING WE'VE GRASPED # TODO: check the contact sensor in the palm 
-                self.arm.pub(eef_l_pose)
-                rospy.sleep(1)
+        if (self.state == State.RELEASE_FROM_HANG):
+            self.arm.pub(release_gripper_left)
+            rospy.sleep(1)
+            self.arm.pub(release_intermediate_left)
+            rospy.sleep(1)
+            self.change_state(State.REACH_FROM_HANG)
+            pass
+        if (self.state == State.REACH_FROM_HANG):
+            self.arm.pub(reach_intermediate_left)
+            rospy.sleep(1)
+            # TODO: last step of reach with eef goal position in mind
+            # ASSUMING WE'VE GRASPED # TODO: check the contact sensor in the palm 
+            self.arm.pub(eef_l_pose)
+            rospy.sleep(1)
 
-                # >>>> slide it down
-                count = 0
-                while (not limit_switch()[0]) or (count < self.count_max):
-                    msg = populate_arm_msg(NO_ACTION, self.slide_counts[count], False, NO_ACTION, NO_ACTION, True)
-                    self.arm.pub(msg)
-                    count += 1
-                    rospy.sleep(0.5)
-                # <<<< now stop the slide
+            # >>>> slide it down
+            count = 0
+            while (not limit_switch()[0]) or (count < self.count_max):
+                msg = populate_arm_msg(NO_ACTION, self.slide_counts[count], False, NO_ACTION, NO_ACTION, True)
+                self.arm.pub(msg)
+                count += 1
+                rospy.sleep(0.5)
+            # <<<< now stop the slide
 
-                self.change_state(State.RETURN_TO_HANG)
-                pass
-            if (self.state == State.RETURN_TO_HANG):
-                self.arm.pub(release_gripper_right)
-                rospy.sleep(1)
-                self.arm.pub(release_intermediate_right)
-                rospy.sleep(1)
-                self.arm.pub(reach_intermediate_right)
-                rospy.sleep(1)
-                # TODO: Reach to same eef position as left (but shifted over)
-                self.arm.pub(eef_r_pose)
+            self.change_state(State.RETURN_TO_HANG)
+            pass
+        if (self.state == State.RETURN_TO_HANG):
+            self.arm.pub(release_gripper_right)
+            rospy.sleep(1)
+            self.arm.pub(release_intermediate_right)
+            rospy.sleep(1)
+            self.arm.pub(reach_intermediate_right)
+            rospy.sleep(1)
+            # TODO: Reach to same eef position as left (but shifted over)
+            self.arm.pub(eef_r_pose)
 
-                # >>>> slide it down
-                count = 0
-                while (not limit_switch()[1]) or (count < self.count_max):
-                    msg = populate_arm_msg(NO_ACTION, NO_ACTION, True, NO_ACTION, self.slide_counts[count], False)
-                    self.arm.pub(msg)
-                    count += 1
-                    rospy.sleep(0.5)
-                # <<<< now stop the slide
+            # >>>> slide it down
+            count = 0
+            while (not limit_switch()[1]) or (count < self.count_max):
+                msg = populate_arm_msg(NO_ACTION, NO_ACTION, True, NO_ACTION, self.slide_counts[count], False)
+                self.arm.pub(msg)
+                count += 1
+                rospy.sleep(0.5)
+            # <<<< now stop the slide
 
-                self.arm.pub(pull_up_msg)
-                rospy.sleep(1)
-                self.change_state(State.DUAL_HANG)
-
-        print("rospy is apparently shut down.")
+            self.arm.pub(pull_up_msg)
+            rospy.sleep(1)
+            self.change_state(State.DUAL_HANG)
 
     def bar_to_cartesian(self):
         if (self.bar is None):
@@ -208,7 +205,9 @@ def main():
     rospy.init_node("StateMachine", anonymous=False)
     sm = StateMachine()
     rospy.loginfo("spinning central controller (state_machine)")
-    sm.loop()
+    while not rospy.is_shutdown():
+        sm.loop()
+        rospy.spin_once()
     # rospy.spin()
     rospy.loginfo("central controller shutting down.")
 
