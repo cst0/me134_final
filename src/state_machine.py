@@ -101,6 +101,7 @@ class StateMachine(object):
         self.slide_counts = list(np.linspace(-1, 1, self.count_max))
 
         while not rospy.is_shutdown():
+            rospy.loginfo(f"State is {state_to_string[self.state]}")
             if (self.state == State.DUAL_HANG):
                 # Scan 
                 # Determine position we want to move to
@@ -160,6 +161,8 @@ class StateMachine(object):
                 self.arm.pub(pull_up_msg)
                 rospy.sleep(1)
                 self.change_state(State.DUAL_HANG)
+
+        print("rospy is apparently shut down.")
 
     def bar_to_cartesian(self):
         if (self.bar is None):
