@@ -4,13 +4,6 @@ import time
 import rospy
 import time
 
-import RPi.GPIO as gpio
-gpio.setmode(gpio.BCM)
-
-gpio.setup(17, gpio.OUT)
-gpio.setup(22, gpio.OUT)
-gpio.setup(21, gpio.IN, pull_up_down=GPIO.PUD_UP)
-
 # Servo motor for changing the angle up or down
 kit = ServoKit(channels=16)
 
