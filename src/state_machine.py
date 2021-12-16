@@ -86,7 +86,7 @@ state_to_string = {
     State.RETURN_TO_HANG: "RETURN_TO_HANG"
     } # TODO    
 
-class StateMachine(object):
+class StateMachine:
     def __init__(self):
         self.arm = rospy.Publisher("control_to_servo", ArmState, queue_size=10)
         self.detected_bar_sub = rospy.Subscriber("grasp_bar", Bar, self.detected_bar, queue_size=1)
@@ -164,7 +164,7 @@ class StateMachine(object):
     def bar_to_cartesian(self):
         if (self.bar is None):
             rospy.logwarn("get_grasping_pose called with no bar.")
-            return None, None
+            return None, None, None, None
         else:
             l_horizon_rads, l_vertical_rads, l_dist_mm, r_horizon_rads, r_vertical_rads, r_dist_mm = self.bar.l_horizon_rads, self.bar.l_vertical_rads, self.bar.l_dist_mm, self.bar.r_horizon_rads, self.bar.r_vertical_rads, self.bar.r_dist_mm
             lx = l_dist_mm * np.sin(l_vertical_rads) * np.cos(l_horizon_rads)
@@ -202,7 +202,7 @@ class StateMachine(object):
         self.bar = msg
 
 def main():
-    rospy.init_node("StateMachine", anonymous=False)
+    rospy.init_node("StateMachine")
     sm = StateMachine()
     rospy.loginfo("spinning central controller (state_machine)")
     while not rospy.is_shutdown():
