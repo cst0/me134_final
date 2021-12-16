@@ -11,7 +11,7 @@ LEFT_FINGER  = 0
 RIGHT_FINGER = 4
 
 LEFT_SHOULDER  = 1
-RIGHT_SHOULDER = 0
+RIGHT_SHOULDER = 5
 
 LEFT_ELBOW  = 2
 RIGHT_ELBOW = 3
@@ -116,33 +116,33 @@ class ServoController(object):
             self.pca.channels[RIGHT_SHOULDER].duty_cycle = int(right_shoulder)
             self.pca.channels[RIGHT_ELBOW].duty_cycle = int(right_elbow)
 
-            # self.pca.channels[LEFT_FINGER].duty_cycle = int(left_finger_duty)
-            # self.pca.channels[RIGHT_FINGER].duty_cycle = int(right_finger_duty)
+            self.pca.channels[LEFT_FINGER].duty_cycle = int(2**11)
+            self.pca.channels[RIGHT_FINGER].duty_cycle = int(2**11)
 
-            if (self.previous_left_finger == left_finger):
-                pass # do nothing
-            elif (self.previous_left_finger and not left_finger):
-                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
-                rospy.sleep(UNWIND_TIME)
-                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
-            elif (not self.previous_left_finger and left_finger):
-                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
-                rospy.sleep(WIND_TIME)
-                self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+            # if (self.previous_left_finger == left_finger):
+            #     pass # do nothing
+            # elif (self.previous_left_finger and not left_finger):
+            #     self.servo_kit.continuous_servo[LEFT_FINGER].throttle = WIND_THROTTLE
+            #     rospy.sleep(UNWIND_TIME)
+            #     self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+            # elif (not self.previous_left_finger and left_finger):
+            #     self.servo_kit.continuous_servo[LEFT_FINGER].throttle = UNWIND_THROTTLE
+            #     rospy.sleep(WIND_TIME)
+            #     self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
 
-            if (self.previous_right_finger == right_finger):
-                pass # do nothing
-            elif (self.previous_right_finger and not right_finger):
-                self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
-                rospy.sleep(UNWIND_TIME)
-                self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
-            elif (not self.previous_right_finger and right_finger):
-                self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
-                rospy.sleep(WIND_TIME)
-                self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+            # if (self.previous_right_finger == right_finger):
+            #     pass # do nothing
+            # elif (self.previous_right_finger and not right_finger):
+            #     self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = WIND_THROTTLE
+            #     rospy.sleep(UNWIND_TIME)
+            #     self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+            # elif (not self.previous_right_finger and right_finger):
+            #     self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = UNWIND_THROTTLE
+            #     rospy.sleep(WIND_TIME)
+            #     self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
 
-            self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
-            self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
+            # self.servo_kit.continuous_servo[RIGHT_FINGER].throttle = 0.0
+            # self.servo_kit.continuous_servo[LEFT_FINGER].throttle = 0.0
             # STORE PREVIOUS VALUES
 
             self.left_shoulder_duty = left_shoulder
